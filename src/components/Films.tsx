@@ -3,6 +3,7 @@ import { Card } from 'primereact/card';
 import { Button } from "primereact/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchStore } from "../store/searchStore";
 
 interface Film {
   episode_id: number;
@@ -48,13 +49,14 @@ const FilmCard = ({ film, index }: { film: Film; index: number }) => {
   );
 };
 
-const Films = ({ search }: { search: string }) => {
-  const { data: films = [], isLoading, isError } = useQuery({
+const Films = () => {
+  const search = useSearchStore((s) => s.search);
+  const { data: films = [], isLoading, isError } = useQuery<Film[]>({
     queryKey: ['films'],
     queryFn: () => fetch("https://swapi.info/api/films").then((res) => res.json()),
   });
 
-  const filtered = films.filter((film: any) =>
+  const filtered = films.filter((film) =>
     film.title?.toLowerCase().includes(search.toLowerCase())
   );
 

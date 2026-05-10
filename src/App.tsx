@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
 
@@ -17,11 +16,10 @@ import "primereact/resources/themes/lara-dark-indigo/theme.css";
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [search, setSearch] = useState("");
 
   return (
     <PrimeReactProvider>
-      <Navbar onSearchChange={setSearch} />
+      <Navbar />
       <div className='p-4'>
         {location.pathname !== '/' && (
           <Button
@@ -38,9 +36,9 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/films" element={<Films search={search} />} />
+        <Route path="/films" element={<Films />} />
         <Route path="/films/:id" element={<FilmDetails />} />
-        <Route path="/characters" element={<Characters search={search} />} />
+        <Route path="/characters" element={<Characters />} />
         <Route path="/favourites" element={<Favourites />} />
       </Routes>
     </PrimeReactProvider>

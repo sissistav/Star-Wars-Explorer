@@ -1,48 +1,23 @@
-import { useState } from "react";
 import { InputText } from "primereact/inputtext";
+import { useSearchStore } from "../store/searchStore";
 
-const Searchbar = ({ onSearchChange }: { onSearchChange?: (value: string) => void }) => {
-  const [searchValue, setSearchValue] = useState("");
-  // const [isSearchBarVisible, setSearchBarVisible] = useState(false);
+const Searchbar = () => {
+  const searchValue = useSearchStore((s) => s.search);
+  const setSearchValue = useSearchStore((s) => s.setSearch);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-
-    if (onSearchChange) {
-      onSearchChange(value);
-    }
   };
 
-//   const toggleSearchBar = () => {
-//     setSearchBarVisible(!isSearchBarVisible);
-//   };
-
-  // const handleBlur = () => {
-  //   if (searchValue.trim() === "") {
-  //     setSearchBarVisible(false);
-  //   }
-  // };
 
   return (
-    <div>
-      {/* {!isSearchBarVisible && (
-        <Button
-          icon="pi pi-search"
-          rounded
-          text
-          severity="success"
-          aria-label="Search"
-          onClick={toggleSearchBar}
-        />
-      )} */}
-        <InputText
-          placeholder="Search"
-          value={searchValue}
-          onChange={handleChange}
-          autoFocus
-        />
-    </div>
+    <InputText
+      placeholder="Search"
+      value={searchValue}
+      onChange={handleChange}
+      autoFocus
+    />
   );
 };
 

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Paginator } from "primereact/paginator";
+import { useSearchStore } from "../store/searchStore";
 
 interface Character {
   name: string;
@@ -46,16 +47,17 @@ const CharacterCard = ({ character }: { character: Character }) => {
   );
 };
 
-const Characters = ({ search }: { search: string }) => {
+const Characters = () => {
+  const search = useSearchStore((s) => s.search);
   const [first, setFirst] = useState(0);
   const rows = 9;
 
-  const { data: characters = [], isLoading, isError } = useQuery({
+  const { data: characters = [], isLoading, isError } = useQuery<Character[]>({
     queryKey: ['characters'],
     queryFn: () => fetch("https://swapi.info/api/people").then((res) => res.json()),
   });
 
-  const filtered = characters.filter((character: any) =>
+  const filtered = characters.filter((character) =>
     character.name?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -68,7 +70,7 @@ const Characters = ({ search }: { search: string }) => {
     <>
       <div className="min-h-screen flex flex-col">
         <div className="flex flex-wrap justify-center gap-4 p-4">
-          {paginated.map((character: any) => (
+          {paginated.map((character) => (
             <CharacterCard key={character.name} character={character} />
           ))}
         </div>

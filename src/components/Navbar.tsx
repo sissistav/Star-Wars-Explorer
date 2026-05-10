@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Searchbar from "./Searchbar";
 
-const Navbar = ({ onSearchChange }: { onSearchChange: (value: string) => void }) => {
+const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const location = useLocation();
   const showSearch = location.pathname === "/characters" || location.pathname === "/films";
-  const [menuOpen, setMenuOpen] = useState(false);
+  const isHomepage = location.pathname === "/";
 
   return (
     <div className="border-b border-gray-700">
@@ -14,14 +16,16 @@ const Navbar = ({ onSearchChange }: { onSearchChange: (value: string) => void })
             Star Wars Explorer
         </Link>
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/films" className="text-white hover:text-yellow-200">Films</Link>
-            <Link to="/characters" className="text-white hover:text-yellow-200">Characters</Link>
-            <Link to="/favourites" className="text-white hover:text-yellow-200">Favourites</Link>
-          </div>
+            {!isHomepage && (
+                <div className="hidden md:flex items-center gap-6">
+                    <Link to="/films" className="text-white hover:text-yellow-200">Films</Link>
+                    <Link to="/characters" className="text-white hover:text-yellow-200">Characters</Link>
+                    <Link to="/favourites" className="text-white hover:text-yellow-200">Favourites</Link>
+                </div>
+            )}
           {showSearch && (
             <span className="hidden md:block">
-              <Searchbar onSearchChange={onSearchChange} />
+              <Searchbar />
             </span>
           )}
           <button
@@ -38,7 +42,7 @@ const Navbar = ({ onSearchChange }: { onSearchChange: (value: string) => void })
           <Link to="/films" className="text-white hover:text-yellow-200" onClick={() => setMenuOpen(false)}>Films</Link>
           <Link to="/characters" className="text-white hover:text-yellow-200" onClick={() => setMenuOpen(false)}>Characters</Link>
           <Link to="/favourites" className="text-white hover:text-yellow-200" onClick={() => setMenuOpen(false)}>Favourites</Link>
-          {showSearch && <Searchbar onSearchChange={onSearchChange} />}
+          {showSearch && <Searchbar />}
         </div>
       )}
     </div>
