@@ -24,9 +24,13 @@ const FilmCard = ({ film, index }: { film: Film; index: number }) => {
   };
 
   return (
-    <div className="flex justify-center pb-4">
+    <div className="w-full sm:w-1/2 lg:w-1/3 p-2">
       <Link to={`/films/${id}`}>
         <Card
+          title={film.title}
+          subTitle={film.release_date}
+          className="w-full cursor-pointer hover:scale-105 transition-transform"
+          pt={{ body: { className: '!pt-0' } }}
           header={
             <Button
               icon={liked ? "pi pi-heart-fill" : "pi pi-heart"}
@@ -38,27 +42,28 @@ const FilmCard = ({ film, index }: { film: Film; index: number }) => {
               pt={{ root: { style: { color: 'yellow' } } }}
             />
           }
-          title={film.title}
-          subTitle={film.release_date}
-          className="w-[400px]">
-        </Card>
+        />
       </Link>
     </div>
   );
 };
 
-const Films = () => {
+const Films = ({ search }: { search: string }) => {
   const { data: films = [], isLoading, isError } = useQuery({
     queryKey: ['films'],
     queryFn: () => fetch("https://swapi.info/api/films").then((res) => res.json()),
   });
 
+  const filtered = films.filter((film: any) =>
+    film.title?.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong.</p>;
 
   return (
-    <div className="flex flex-wrap justify-around">
-      {films.map((film: Film, index: number) => (
+    <div className="flex flex-wrap px-2">
+      {filtered.map((film: Film, index: number) => (
         <FilmCard key={film.episode_id} film={film} index={index} />
       ))}
     </div>

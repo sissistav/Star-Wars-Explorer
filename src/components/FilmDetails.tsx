@@ -11,6 +11,8 @@ const FilmDetails = () => {
     queryFn: () => fetch(`https://swapi.info/api/films/${id}`).then((res) => res.json()),
   });
 
+  console.log(filmDetails)
+
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong.</p>;
@@ -72,6 +74,9 @@ const FilmDetails = () => {
           </p>
           <p>
             <strong>Species:</strong> {filmDetails.species.length}
+          </p>
+          <p>
+            <strong>Vehicles:</strong> {filmDetails.vehicles.length}
           </p>
         </div>
       </Card>
