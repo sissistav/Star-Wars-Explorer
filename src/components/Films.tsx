@@ -51,12 +51,12 @@ const FilmCard = ({ film, index }: { film: Film; index: number }) => {
 
 const Films = () => {
   const search = useSearchStore((s) => s.search);
-  const { data: films = [], isLoading, isError } = useQuery<Film[]>({
+  const { data: films = [], isLoading, isError } = useQuery({
     queryKey: ['films'],
     queryFn: () => fetch("https://swapi.info/api/films").then((res) => res.json()),
   });
 
-  const filtered = films.filter((film) =>
+  const filtered = films.filter((film: any) =>
     film.title?.toLowerCase().includes(search.toLowerCase())
   );
 

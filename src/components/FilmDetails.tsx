@@ -11,9 +11,6 @@ const FilmDetails = () => {
     queryFn: () => fetch(`https://swapi.info/api/films/${id}`).then((res) => res.json()),
   });
 
-  console.log(filmDetails)
-
-
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong.</p>;
 

@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { useQuery } from '@tanstack/react-query';
+
+import Species from "./Species";
+import { useSearchStore } from "../store/searchStore";
+
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Paginator } from "primereact/paginator";
-import { useSearchStore } from "../store/searchStore";
-
 interface Character {
   name: string;
   gender: string;
   species: string[];
 }
 
-const CharacterCard = ({ character }: { character: Character }) => {
+const CharacterCard = ({
+  character,
+}: {
+  character: Character;
+}) => {
   const [liked, setLiked] = useState(() => {
     return localStorage.getItem(`character-liked-${character.name}`) === 'true';
   });
@@ -40,9 +46,9 @@ const CharacterCard = ({ character }: { character: Character }) => {
           pt={{ root: { style: { color: 'yellow' } } }}
         />
       }>
-      {character.species.length === 0
-        ? <p>Species: Human</p>
-        : <p>Species: {character.species}</p>}
+      <p>
+        Species: <Species urls={character.species} />
+      </p>
     </Card>
   );
 };
@@ -56,6 +62,8 @@ const Characters = () => {
     queryKey: ['characters'],
     queryFn: () => fetch("https://swapi.info/api/people").then((res) => res.json()),
   });
+
+  console.log(characters)
 
   const filtered = characters.filter((character) =>
     character.name?.toLowerCase().includes(search.toLowerCase())
@@ -71,7 +79,10 @@ const Characters = () => {
       <div className="min-h-screen flex flex-col">
         <div className="flex flex-wrap justify-center gap-4 p-4">
           {paginated.map((character) => (
-            <CharacterCard key={character.name} character={character} />
+            <CharacterCard
+              key={character.name}
+              character={character}
+            />
           ))}
         </div>
       </div>
