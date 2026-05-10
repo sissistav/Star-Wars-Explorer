@@ -6,7 +6,7 @@ const Homepage = () => {
   
   return (
     <div className="flex flex-col items-center">
-      <div className="text-[#19eefd] text-2xl md:text-4xl py-10 text-center px-4">
+      <div className="text-[#19eefd] text-2xl md:text-4xl pt-10 pb-20 text-center px-4">
         <p>A long time ago in a galaxy far,</p>
         <p>far away....</p>
       </div>
