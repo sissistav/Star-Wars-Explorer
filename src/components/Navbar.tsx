@@ -10,8 +10,8 @@ const Navbar = ({ onSearchChange }: { onSearchChange: (value: string) => void })
   return (
     <div className="border-b border-gray-700">
       <div className="flex justify-between items-center p-4">
-        <Link to="/" className="text-xl md:text-2xl text-yellow-200 no-underline">
-          Star Wars Explorer
+        <Link to="/" style={{ fontFamily: "'Star Wars', sans-serif" }} className="text-xl md:text-2xl text-yellow-200 no-underline">
+            Star Wars Explorer
         </Link>
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-6">
