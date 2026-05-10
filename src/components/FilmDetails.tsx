@@ -3,16 +3,26 @@ import { useParams } from "react-router-dom";
 import { Card } from "primereact/card";
 import { useQuery } from "@tanstack/react-query";
 
+import { PageEmpty, PageError, PageLoading } from "./QueryStates";
+
 const FilmDetails = () => {
   const { id } = useParams();
 
   const { data: filmDetails, isLoading, isError } = useQuery({
     queryKey: ['filmDetails', id],
-    queryFn: () => fetch(`https://swapi.info/api/films/${id}`).then((res) => res.json()),
+    queryFn: async () => {
+      const res = await fetch(`https://swapi.info/api/films/${id}`);
+      if (!res.ok) throw new Error("Film not found");
+      return res.json();
+    },
+    enabled: Boolean(id),
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Something went wrong.</p>;
+  if (isLoading) return <PageLoading label="Loading film…" />;
+  if (isError) return <PageError message="Film could not be loaded. Check the URL or try again." />;
+  if (!filmDetails?.title) {
+    return <PageEmpty title="Film not found" detail={`No film for id “${id}”.`} />;
+  }
 
   return (
     <div className="p-6 max-w-5xl mx-auto min-h-screen text-white">

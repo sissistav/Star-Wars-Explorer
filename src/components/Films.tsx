@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchStore } from "../store/searchStore";
+import { PageEmpty, PageError, PageLoading } from "./QueryStates";
 
 interface Film {
   episode_id: number;
@@ -51,21 +52,37 @@ const FilmCard = ({ film, index }: { film: Film; index: number }) => {
 
 const Films = () => {
   const search = useSearchStore((s) => s.search);
-  const { data: films = [], isLoading, isError } = useQuery({
+  const { data: films = [], isLoading, isError } = useQuery<Film[]>({
     queryKey: ['films'],
     queryFn: () => fetch("https://swapi.info/api/films").then((res) => res.json()),
   });
 
-  const filtered = films.filter((film: any) =>
+  const filtered = films.filter((film) =>
     film.title?.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Something went wrong.</p>;
+  if (isLoading) return <PageLoading label="Loading films…" />;
+  if (isError) return <PageError />;
+
+  if (filtered.length === 0) {
+    const fromApi = films.length === 0;
+    return (
+      <PageEmpty
+        title={fromApi ? "No films available" : "No films match your search"}
+        detail={
+          fromApi
+            ? undefined
+            : search.trim()
+              ? `Try a different term than “${search.trim()}”.`
+              : "Try another search."
+        }
+      />
+    );
+  }
 
   return (
     <div className="flex flex-wrap px-2">
-      {filtered.map((film: Film, index: number) => (
+      {filtered.map((film, index: number) => (
         <FilmCard key={film.episode_id} film={film} index={index} />
       ))}
     </div>

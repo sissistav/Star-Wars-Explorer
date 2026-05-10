@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
 
+import { PageError, PageLoading } from "./QueryStates";
+
 interface Film {
   episode_id: number;
   title: string;
@@ -32,8 +34,10 @@ const Favourites = () => {
     localStorage.getItem(`character-liked-${character.name}`) === 'true'
   );
 
-  if (filmsLoading || charactersLoading) return <p>Loading...</p>;
-  if (filmsError || charactersError) return <p>Something went wrong.</p>;
+  if (filmsLoading || charactersLoading) {
+    return <PageLoading label="Loading favourites…" />;
+  }
+  if (filmsError || charactersError) return <PageError />;
 
   return (
     <div className="p-4">

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import Species from "./Species";
 import { useSearchStore } from "../store/searchStore";
+import { PageEmpty, PageError, PageLoading } from "./QueryStates";
 
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
@@ -63,16 +64,30 @@ const Characters = () => {
     queryFn: () => fetch("https://swapi.info/api/people").then((res) => res.json()),
   });
 
-  console.log(characters)
-
   const filtered = characters.filter((character) =>
     character.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   const paginated = filtered.slice(first, first + rows);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Something went wrong.</p>;
+  if (isLoading) return <PageLoading label="Loading characters…" />;
+  if (isError) return <PageError />;
+
+  if (filtered.length === 0) {
+    const fromApi = characters.length === 0;
+    return (
+      <PageEmpty
+        title={fromApi ? "No characters available" : "No characters match your search"}
+        detail={
+          fromApi
+            ? undefined
+            : search.trim()
+              ? `Try a different term than “${search.trim()}”.`
+              : "Try another search."
+        }
+      />
+    );
+  }
 
   return (
     <>
